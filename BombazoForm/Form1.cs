@@ -74,8 +74,7 @@ namespace BombazoForm {
             openMapToolStrip.Enabled = false;
             gameTableFlowLayout.Visible = true;
             _tableIsReady = true;
-        }
-        //ebben csak olyan metódusok legyenek amik nem befolyásolják a timert a modelben.
+        }        
         private void Tick(object? sender, ElapsedEventArgs args) {
             if (!_model.IsGameOver()) {
                 
