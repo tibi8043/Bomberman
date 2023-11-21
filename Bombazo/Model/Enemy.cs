@@ -1,13 +1,17 @@
-﻿namespace Bombazo.Model {
+﻿using System.Data;
+using System.Dynamic;
+
+namespace Bombazo.Model {
     public class Enemy : IEntity {
         private Position _position;
-        private readonly Random _numDirection = new Random();
         private bool _isDead;
-        private Direction _direction;
+        private List<Direction> _directions = new List<Direction>();
+        private Direction _actualDirection;
         public bool IsEnemy => true;
         public bool IsPlayer => false;
 
-        public Direction Direction => _direction;
+        public Direction ActualDirection => _actualDirection;
+        public List<Direction> Directions => _directions;
 
         public Position GetPosition => _position;
 
@@ -22,16 +26,34 @@
         }
 
         public Enemy(Position position) {
+            _directions.Add(Direction.UP);
+            _directions.Add(Direction.DOWN);
+            _directions.Add(Direction.LEFT);
+            _directions.Add(Direction.RIGHT);
+            ShuffleDirections();
+            
             _position = position;
             _isDead = false;
-            _direction = (Direction)_numDirection.Next(0, 4);
+            _actualDirection = _directions[0];
+            _directions.RemoveAt(0);
         }
 
         public void Move(Direction dir) {
         }
 
-        public void GetNewDirection() {
-            _direction = (Direction)_numDirection.Next(0, 4);
+        private void ShuffleDirections() {
+                _directions = _directions.OrderBy(a => Guid.NewGuid()).ToList();
+        }
+        public void SetNewDirection() {
+            if(_directions.Count == 0) {
+                _directions.Add(Direction.UP);
+                _directions.Add(Direction.DOWN);
+                _directions.Add(Direction.LEFT);
+                _directions.Add(Direction.RIGHT);
+                ShuffleDirections();
+            }
+            _actualDirection = _directions[0];
+            _directions.RemoveAt(0);
         }
     }
 }

@@ -24,34 +24,36 @@
         }
 
         public void MoveEnemy(Enemy enemy) {
-            var original = new Position(enemy.GetPosition);
-            Position next = enemy.Direction
-                switch {
+            while (true) {
+                var original = new Position(enemy.GetPosition);
+                Position next = enemy.ActualDirection switch {
                     Direction.UP => new Position(enemy.GetPosition.X, ++enemy.GetPosition.Y),
                     Direction.DOWN => new Position(enemy.GetPosition.X, --enemy.GetPosition.Y),
                     Direction.LEFT => new Position(--enemy.GetPosition.X, enemy.GetPosition.Y),
                     Direction.RIGHT => new Position(++enemy.GetPosition.X, enemy.GetPosition.Y),
                     _ => throw new ArgumentException("Undefined enum constant")
                 };
-            if (!enemy.GetIsDead) {
-                if (SetField(next, FieldType.ENEMY, enemy)) {
-                    if (GetFieldType(next) == FieldType.EXPLOSION) {
-                        enemy.SetIsDead = true;
-                    }
+                if (!enemy.GetIsDead) {
+                    if (SetField(next, FieldType.ENEMY, enemy)) {
+                        if (GetFieldType(next) == FieldType.EXPLOSION) {
+                            enemy.SetIsDead = true;
+                        }
 
-                    if (PlayerIsCaught) {
-                        SetField(original, FieldType.PATH, null);
-                        throw new GameOverException();
+                        if (PlayerIsCaught) {
+                            SetField(original, FieldType.PATH, null);
+                            throw new GameOverException();
+                        }
+                        else {
+                            SetField(original, FieldType.PATH, null);
+                        }
                     }
                     else {
-                        SetField(original, FieldType.PATH, null);
+                        enemy.SetPosition = original;
+                        enemy.SetNewDirection();
+                        continue;
                     }
                 }
-                else {
-                    enemy.SetPosition = original;
-                    enemy.GetNewDirection();
-                    MoveEnemy(enemy);
-                }
+                break;
             }
         }
 

@@ -21,7 +21,7 @@ namespace BombazoForm {
         private void openMapToolStripMenuItem_Click(object sender, EventArgs e) {
             OpenMap().GetAwaiter();
         }
-        
+
         private async Task OpenMap() {
             using (OpenFileDialog openFileDialog = new OpenFileDialog()) {
                 openFileDialog.Filter = "Txt Files (*.txt)|*.txt";
@@ -70,18 +70,19 @@ namespace BombazoForm {
                     gameTableFlowLayout.Controls.Add(p);
                 }
             }
+
             gameStatusStripLabel.Text = "A játék folyamatban van";
             openMapToolStrip.Enabled = false;
             gameTableFlowLayout.Visible = true;
             _tableIsReady = true;
-        }        
+        }
+
         private void Tick(object? sender, ElapsedEventArgs args) {
             if (!_model.IsGameOver()) {
-                
                 RefreshTable();
             }
             else {
-                Invoke(AfterGameOver);  
+                Invoke(AfterGameOver);
             }
             ToolStripOnTick();
         }
@@ -125,12 +126,12 @@ namespace BombazoForm {
                     }
                 }
                 catch (GameOverException) {
-                    
                 }
 
                 if (_model.GameOver) {
                     Invoke(AfterGameOver);
                 }
+
                 RefreshTable();
             }
         }
@@ -159,7 +160,8 @@ namespace BombazoForm {
             openMapToolStrip.Enabled = true;
             pauseToolStripMenuItem.Enabled = false;
             _tableIsReady = false;
-            ShowMessageBoxes(); 
+            ToolStripOnTick();
+            ShowMessageBoxes();
         }
 
         private void ShowMessageBoxes() {
