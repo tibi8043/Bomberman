@@ -58,7 +58,7 @@ namespace Bombazo.Model {
 
         private void Tick(object? sender, ElapsedEventArgs args) {
             MoveGuardsOnTick();
-            if (!_gameOver) {
+            if (!_gameOver && !_paused) {
                 _elapsedSeconds++;
             }
         }
