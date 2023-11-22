@@ -1,0 +1,131 @@
+﻿<Window x:Class="BombazoWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewmodel="clr-namespace:BombazoWPF.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:BombazoViewModel}"
+        mc:Ignorable="d"
+        Title="BombazoWPF" Height="768" Width="1024">
+    <Window.InputBindings>
+        <KeyBinding Key="Left" Command="{Binding MoveLeftCommand}" />
+        <KeyBinding Key="Right" Command="{Binding MoveRightCommand}" />
+        <KeyBinding Key="Up" Command="{Binding MoveUpCommand}" />
+        <KeyBinding Key="Down" Command="{Binding MoveDownCommand}" />
+        <KeyBinding Key="Space" Command="{Binding PlantBombCommand}" />
+        <KeyBinding Key="P" Command="{Binding PauseCommand}" />
+    </Window.InputBindings>
+    <Window.Resources>
+        <ControlTemplate x:Key="NoMouseOverButtonTemplate"   
+                         TargetType="Button">  
+            <Border Background="{TemplateBinding Background}"  
+                    BorderBrush="{TemplateBinding BorderBrush}"  
+                    BorderThickness="{TemplateBinding BorderThickness}">  
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />  
+            </Border>  
+  
+            <ControlTemplate.Triggers>  
+                <Trigger Property="IsEnabled"  
+                         Value="False">  
+                    <Setter Property="Background"  
+                            Value="{x:Static SystemColors.ControlLightBrush}" />  
+                    <Setter Property="Foreground"  
+                            Value="{x:Static SystemColors.GrayTextBrush}" />  
+                </Trigger>  
+            </ControlTemplate.Triggers>  
+        </ControlTemplate>  
+    </Window.Resources>
+    <Grid x:Name="Box">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Menu x:Name="Menu" Height="20" VerticalAlignment="Top" Grid.Row="0">
+            <MenuItem Header="Játék">
+                <MenuItem Header="Pálya betöltése" Command="{Binding LoadMapCommand}"></MenuItem>
+                <MenuItem Header="Pause"  Command="{Binding PauseCommand}"></MenuItem>
+                <MenuItem Header="Kilépés" Command="{Binding ExitCommand}"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid Grid.Row="1" x:Name="Content" Width="1000" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="800" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+            <WrapPanel Orientation="Horizontal" Grid.Column="0">
+                <ItemsControl
+                    x:Name="gameArea"
+                    Width="700"
+                    Height="700"
+                    ItemsSource="{Binding Fields}"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="{Binding FieldCount, Mode=OneWay}"
+                                         Columns="{Binding FieldCount, Mode=OneWay}" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button  Focusable="False" Template="{StaticResource NoMouseOverButtonTemplate}">
+                                <Button.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1" />
+                                </Button.RenderTransform>
+
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding FieldType}" Value="PATH">
+                                                <Setter Property="Background" Value="White" />
+                                            </DataTrigger>
+                                            
+                                            <DataTrigger Binding="{Binding FieldType}" Value="EXPLOSION">
+                                                <Setter Property="Background" Value="Orange" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding FieldType}" Value="BOMB">
+                                                <Setter Property="Background" Value="Black" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding FieldType}" Value="PLAYERANDBOMB">
+                                                <Setter Property="Background" Value="Yellow" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding FieldType}" Value="PLAYER">
+                                                <Setter Property="Background" Value="Green" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding FieldType}" Value="ENEMY">
+                                                <Setter Property="Background" Value="Red" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding FieldType}" Value="WALL">
+                                                <Setter Property="Background" Value="Gray" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </WrapPanel>
+            <DockPanel Grid.Column="1">
+                <TextBox TextWrapping="Wrap" TextAlignment="Justify">
+                    <TextBox.Text>
+                        A játék célja, hogy felrobbantsd az összes ellenséget bombák segítségével, de légy óvatos, mert a bomba téged is meg tud ölni.
+                        A játék menüben a pálya megnyitása gombbal tudod kiválasztani a pályát. Figyelj arra, hogy helyesen létrehozott fájlokat adj hozzá.
+                        További információkat a játék melletti sugó fülben találsz!
+                        Jó játékot!
+                    </TextBox.Text>
+                </TextBox>
+            </DockPanel>
+        </Grid>
+        <StatusBar Grid.Row="2" VerticalAlignment="Bottom">
+
+        </StatusBar>
+    </Grid>
+</Window>

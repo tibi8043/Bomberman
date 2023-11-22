@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BombazoForm", "BombazoForm\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BombazoTest", "BombazoTest\BombazoTest.csproj", "{066B7861-72C3-45DE-96EF-16ABE6821F0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BombazoWPF", "BombazoWPF\BombazoWPF.csproj", "{926A1A69-E04D-466E-BB93-16ED5B2A471E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{066B7861-72C3-45DE-96EF-16ABE6821F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{066B7861-72C3-45DE-96EF-16ABE6821F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{066B7861-72C3-45DE-96EF-16ABE6821F0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{926A1A69-E04D-466E-BB93-16ED5B2A471E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{926A1A69-E04D-466E-BB93-16ED5B2A471E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{926A1A69-E04D-466E-BB93-16ED5B2A471E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{926A1A69-E04D-466E-BB93-16ED5B2A471E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

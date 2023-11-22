@@ -156,11 +156,12 @@ namespace BombazoForm {
         }
 
         private void AfterGameOver() {
+            RefreshTable();
+            ToolStripOnTick();
             gameStatusStripLabel.Visible = false;
             openMapToolStrip.Enabled = true;
             pauseToolStripMenuItem.Enabled = false;
             _tableIsReady = false;
-            ToolStripOnTick();
             ShowMessageBoxes();
         }
 
