@@ -11,6 +11,9 @@ namespace Bombazo.Model {
         private int _elapsedSeconds;
         private readonly System.Timers.Timer _timer = new System.Timers.Timer();
 
+        //Ez lesz a subject
+        public event EventHandler? GameIsOverEventHandler;
+
         public System.Timers.Timer Timer => _timer;
         public GameTable? GameTable => _gameTable;
         public Player? Player => _player;
@@ -22,7 +25,6 @@ namespace Bombazo.Model {
             if (_gameTable is not null) {
                 return _gameTable.EnemyList.Count(enemy => enemy.GetIsDead);
             }
-
             return 0;
         }
 
@@ -107,6 +109,10 @@ namespace Bombazo.Model {
             }
         }
 
+        private void NotifyObservers() {
+            GameIsOverEventHandler?.Invoke(this, EventArgs.Empty);
+        }
+
         public bool IsGameOver() {
             if (_gameTable is null) return false;
             //Felrobbantotta magát            
@@ -114,6 +120,7 @@ namespace Bombazo.Model {
                 _overReason = GameOverType.DEAD;
                 _gameOver = true;
                 Dispose();
+                NotifyObservers();
                 return true;
             }
 
@@ -122,6 +129,7 @@ namespace Bombazo.Model {
                 _overReason = GameOverType.WIN;
                 _gameOver = true;
                 Dispose();
+                NotifyObservers();
                 return true;
             }
 
@@ -130,9 +138,9 @@ namespace Bombazo.Model {
                 _overReason = GameOverType.LOSE;
                 _gameOver = true;
                 Dispose();
+                NotifyObservers();
                 return true;
             }
-
             return false;
         }
 

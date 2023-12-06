@@ -23,7 +23,7 @@
             FillMapWithPath();
         }
 
-        public void MoveEnemy(Enemy enemy) {
+        private void MoveEnemy(Enemy enemy) {
             while (true) {
                 var original = new Position(enemy.GetPosition);
                 Position next = enemy.ActualDirection switch {
@@ -48,7 +48,7 @@
                         }
                     }
                     else {
-                        enemy.SetPosition = original;
+                        enemy.SetPosition = original;                        
                         enemy.SetNewDirection();
                         continue;
                     }

@@ -13,9 +13,6 @@ using System.Windows;
 using Microsoft.Win32;
 
 namespace BombazoWPF {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application {
         private GameModel _model = null!;
         private BombazoViewModel _viewModel = null!;
@@ -33,7 +30,8 @@ namespace BombazoWPF {
             _viewModel.LoadEvent += new EventHandler(ViewModel_LoadGame);
             _viewModel.TickEvent += new EventHandler(ViewModel_Tick);
             _viewModel.AfterGameOverEvent += new EventHandler(ViewModel_AfterGameOver);
-
+            _viewModel.ColorInstructionsEvent += new EventHandler(ViewModel_ColorInstructions);
+            _viewModel.MapInstructionsEvent += new EventHandler(ViewModel_MapInstructions);
             _view = new MainWindow();
             _view.DataContext = _viewModel;
             _view.Show();
@@ -69,11 +67,7 @@ namespace BombazoWPF {
 
         private void ViewModel_AfterGameOver(object? sender, EventArgs args) {
             _viewModel.TableIsReady = false;
-            /*gameStatusStripLabel.Visible = false;
-            openMapToolStrip.Enabled = true;
-            pauseToolStripMenuItem.Enabled = false;
-            ToolStripOnTick();
-            */
+            _viewModel.Refresh();
             Dispatcher.Invoke(ShowMessageBoxes);
         }
 
@@ -112,11 +106,36 @@ namespace BombazoWPF {
 
         private void ViewModel_Tick(object? sender, EventArgs args) {
             if (!_model.IsGameOver()) {
-                _viewModel.RefreshMapCollection();
+                _viewModel.Refresh();
             }
             else {
                 _viewModel.AfterGameOver();
             }
+        }
+
+        public void ViewModel_ColorInstructions(object? sender, EventArgs args) {
+            MessageBox.Show("A színek jelentése: \n" +
+                            "Zöld: Játékos \n" +
+                            "Piros: Ellenség \n" +
+                            "Szürke: Fal \n" +
+                            "Fekete: Bomba \n" +
+                            "Citromsárga: Játékos és bomba egy mezőn \n" +
+                            "Narancssárga: Robbanás területe \n" +
+                            "Fehér: Járható útvonal", "Színek jelentése", MessageBoxButton.OK);
+        }
+
+        public void ViewModel_MapInstructions(object? sender, EventArgs args) {
+            MessageBox.Show(
+                "A pálya fontos, hogy txt fájl legyen." +
+                "Az első sorban adj meg egy egész számot, ez legyen a pálya mérete. pl 10 vagy 20. Vedd figyelemeb, hogy a nagyobb pályák hosszabb töltési időt igényelnek!\n " +
+                "A második sorban add meg a falak koordinátáit, ilyen módon \" jelek nélkül: \"Walls=[x,y]\" Ha több falat szeretnél megadni, " +
+                "akkor a koordinátákat pontos vesszővel válaszd el pl 2,4;5,1;5,6 Fontos hogy egész számokat adj meg! \n " +
+                "A harmadik sorban add meg az ellenségek koordinátáit, ilyen módon \" jelek nélkül: \"Enemies=[x,y]\" Ha több ellenséget szeretnél megadni, " +
+                "akkor a koordinátákat pontosvesszővel válaszd el pl 1,5;2,1;6,8 Fontos hogy egész számokat adj meg! \n " +
+                "Ügyelj arra hogy a fájl ne tartalmazzon felesleges karaktereket, szóközöket, bekezdéseket! " +
+                "Vedd figyelembe, hogy a 0,0 pozícióban csak a játékos lehet, tehát a 0,0 0,1 1,0 és az 1,1 pozíciókra ne rakj semmit! " +
+                "Miután elkészítetted álmaid pályáját mentsd el és nyisd meg a játékon belül és mehet is a móka! " +
+                "Sok sikert a pályák készítéséhez! :)", "Pályák készítése", MessageBoxButton.OK);
         }
     }
 }

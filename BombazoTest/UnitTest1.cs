@@ -2,7 +2,7 @@ using Bombazo.Model;
 
 namespace BombazoTest {
     [TestClass]
-    public class UnitTest1 {
+    public class UnitTest1 : IDisposable {
         private GameModel _gameModel = new GameModel();
 
         [TestInitialize]
@@ -11,10 +11,10 @@ namespace BombazoTest {
             _gameModel = GameModel.GameModelFactory(path).GetAwaiter().GetResult();
         }
         [TestMethod]
-        public void  IsTableInitialized() {
+        public void IsTableInitialized() {
             Assert.IsFalse(_gameModel.GameTable is null);
         }
-        
+
         [TestMethod]
         public void IsGameOver() {
             Assert.AreEqual(_gameModel.IsGameOver(), false);
@@ -22,8 +22,8 @@ namespace BombazoTest {
 
         [TestMethod]
         public void CheckPlayerInit() {
-            Assert.AreEqual(_gameModel.Player?.Position.X, 0);
-            Assert.AreEqual(_gameModel.Player?.Position.Y, 0);
+            Assert.AreEqual(_gameModel.Player?.GetPosition.X, 0);
+            Assert.AreEqual(_gameModel.Player?.GetPosition.Y, 0);
         }
 
         [TestMethod]
@@ -34,8 +34,8 @@ namespace BombazoTest {
         [TestMethod]
         public void CheckPlayerAndBombInit() {
             _gameModel.Player?.PlantBomb();
-            if (_gameModel.Player?.Position != null)
-                Assert.AreEqual(_gameModel.GameTable?.GetFieldType(_gameModel.Player.Position),
+            if (_gameModel.Player?.GetPosition != null)
+                Assert.AreEqual(_gameModel.GameTable?.GetFieldType(_gameModel.Player.GetPosition),
                     FieldType.PLAYERANDBOMB);
         }
 
@@ -52,7 +52,7 @@ namespace BombazoTest {
             _gameModel.Player?.Move(Direction.RIGHT);
             Assert.IsTrue(_gameModel.IsGameOver());
             Assert.IsTrue(_gameModel.OverReason == GameOverType.DEAD);
-            Assert.IsTrue(_gameModel.GameTable?.PlayerIsDead);
+            Assert.IsTrue(_gameModel.GameTable?.GetPlayerIsDead);
         }
 
         [TestMethod]
@@ -78,6 +78,16 @@ namespace BombazoTest {
             _gameModel.GameTable?.SetField(new Position(2, 9), FieldType.PLAYER, _gameModel.Player);
             Assert.IsTrue(_gameModel.IsGameOver());
             Assert.IsTrue(_gameModel.OverReason == GameOverType.LOSE);
+        }
+        protected virtual void Dispose(bool disposing) {
+            if (disposing) {
+                _gameModel.Timer.Stop();
+            }
+        }
+
+        public void Dispose() {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

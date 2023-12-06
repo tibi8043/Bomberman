@@ -1,3 +1,4 @@
+using System.Data;
 using System.Timers;
 using Bombazo.Model;
 
@@ -16,9 +17,10 @@ namespace BombazoForm {
                 (int)Math.Floor(clientDisplay.Height * 0.80));
             MinimumSize = new Size((int)Math.Floor(clientDisplay.Width * 0.75),
                 (int)Math.Floor(clientDisplay.Height * 0.75));
+            
         }
 
-        private void openMapToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void openMapToolStripMenuItem_Click(object? sender, EventArgs e) {
             OpenMap().GetAwaiter();
         }
 
@@ -27,11 +29,11 @@ namespace BombazoForm {
                 openFileDialog.Filter = "Txt Files (*.txt)|*.txt";
                 if (openFileDialog.ShowDialog() == DialogResult.OK) {
                     try {
-                        gameTableFlowLayout.Visible = false;
                         _model = await GameModel.GameModelFactory(openFileDialog.FileName);
+                        InitializeWindow();
                         InitializeTable();
-                        pauseToolStripMenuItem.Enabled = true;
                         _model.Timer.Elapsed += Tick;
+                        _model.GameIsOverEventHandler += model_GameIsOver;
                         ToolStripOnTick();
                     }
                     catch (Exception exc) {
@@ -42,6 +44,11 @@ namespace BombazoForm {
             }
         }
 
+        private void InitializeWindow() {
+            pauseToolStripMenuItem.Enabled = true;
+            gameStatusStripLabel.Visible = true;
+            gameTableFlowLayout.Visible = false;
+        }
         private void InitializeTable() {
             Padding zeroPadding = new Padding(0);
             Size zeroSize = new Size(0, 0);
@@ -78,13 +85,10 @@ namespace BombazoForm {
         }
 
         private void Tick(object? sender, ElapsedEventArgs args) {
-            if (!_model.IsGameOver()) {
+            if (_tableIsReady) {
                 RefreshTable();
+                ToolStripOnTick();
             }
-            else {
-                Invoke(AfterGameOver);
-            }
-            ToolStripOnTick();
         }
 
         private void RefreshTable() {
@@ -127,13 +131,12 @@ namespace BombazoForm {
                 }
                 catch (GameOverException) {
                 }
-
-                if (_model.GameOver) {
-                    Invoke(AfterGameOver);
-                }
-
                 RefreshTable();
             }
+        }
+
+        private void model_GameIsOver(object? sender, EventArgs e) {
+            Invoke(AfterGameOver);
         }
 
         private Color SetBgColor(FieldType fieldType) {
@@ -156,12 +159,11 @@ namespace BombazoForm {
         }
 
         private void AfterGameOver() {
-            RefreshTable();
-            ToolStripOnTick();
             gameStatusStripLabel.Visible = false;
             openMapToolStrip.Enabled = true;
             pauseToolStripMenuItem.Enabled = false;
             _tableIsReady = false;
+            ToolStripOnTick();
             ShowMessageBoxes();
         }
 
@@ -200,14 +202,14 @@ namespace BombazoForm {
         private void ToolStripOnTick() {
             timeLabel.Text = String.Format("Eltelt idő: {0:00}:{1:00}", _model.ElapsedSeconds / 60,
                 _model.ElapsedSeconds % 60);
-            gameIndicator.Text = _model.IsGameOver() ? "A játék véget ért" : "Robbantsd fel az ellenségeket!";
+            gameIndicator.Text = _model.GameOver ? "A játék véget ért" : "Robbantsd fel az ellenségeket!";
             killedEnemiesLabel.Text = $"Felrobbantott ellenségek száma: {_model.KilledEnemiesCount()}";
+            gameStatusStripLabel.Text = _model.GameIsPaused ? "A játék megállítva" : "A játék folyamatban van";
+            pauseToolStripMenuItem.Text = _model.GameIsPaused ? "Folytatás" : "Megállítás";
         }
 
         private void pauseToolStripMenuItem_Click(object sender, EventArgs e) {
             _model.PauseGame();
-            gameStatusStripLabel.Text = _model.GameIsPaused ? "A játék megállítva" : "A játék folyamatban van";
-            pauseToolStripMenuItem.Text = _model.GameIsPaused ? "Folytatás" : "Megállítás";
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
