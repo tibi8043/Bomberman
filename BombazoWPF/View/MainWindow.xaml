@@ -15,27 +15,6 @@
         <KeyBinding Key="Space" Command="{Binding PlantBombCommand}" />
         <KeyBinding Key="P" Command="{Binding PauseCommand}" />
     </Window.InputBindings>
-    <Window.Resources>
-        <ControlTemplate x:Key="NoMouseOverButtonTemplate"
-                         TargetType="Button">
-            <Border Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}">
-                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-            </Border>
-
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsEnabled"
-                         Value="False">
-                    <Setter Property="Background"
-                            Value="{x:Static SystemColors.ControlLightBrush}" />
-                    <Setter Property="Foreground"
-                            Value="{x:Static SystemColors.GrayTextBrush}" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-    </Window.Resources>
     <Grid x:Name="Box">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -44,13 +23,13 @@
         </Grid.RowDefinitions>
         <Menu x:Name="Menu" Height="20" VerticalAlignment="Top" Grid.Row="0">
             <MenuItem Header="Játék">
-                <MenuItem Header="Pálya betöltése" Command="{Binding LoadMapCommand}"></MenuItem>
-                <MenuItem Header="Pause" IsEnabled="{Binding TableIsReady}" Command="{Binding PauseCommand}"></MenuItem>
-                <MenuItem Header="Kilépés" Command="{Binding ExitCommand}"></MenuItem>
+                <MenuItem Header="Pálya betöltése" Command="{Binding LoadMapCommand}" />
+                <MenuItem Header="Pause" IsEnabled="{Binding TableIsReady}" Command="{Binding PauseCommand}"/>
+                <MenuItem Header="Kilépés" Command="{Binding ExitCommand}"/>
             </MenuItem>
             <MenuItem Header="Sugó">
-                <MenuItem Header="Színek jelentése" Command="{Binding ColorInstructionsCommand}"></MenuItem>
-                <MenuItem Header="Pálya készítése" Command="{Binding MapInstructionsCommand}"></MenuItem>
+                <MenuItem Header="Színek jelentése" Command="{Binding ColorInstructionsCommand}"/>
+                <MenuItem Header="Pálya készítése" Command="{Binding MapInstructionsCommand}"/>
             </MenuItem>
         </Menu>
         <Grid Grid.Row="1" x:Name="Content" Width="1000" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -69,12 +48,12 @@
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid></UniformGrid>
-                         </ItemsPanelTemplate>
+                        </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Focusable="False" Template="{StaticResource NoMouseOverButtonTemplate}">
+                            <Button>
                                 <Button.RenderTransform>
                                     <ScaleTransform ScaleX="1" ScaleY="1" />
                                 </Button.RenderTransform>
@@ -131,12 +110,12 @@
         </Grid>
         <StatusBar Grid.Row="2" Height="auto" VerticalAlignment="Bottom" >
             <Label>Eltelt idő</Label>
-            <TextBlock x:Name="TimeTextBlock" Text="{Binding ElapsedSeconds}"></TextBlock>
-            <Separator></Separator>
-            <Label Content="Felrobbantott ellenfelek száma:"></Label>
-            <TextBlock x:Name="KilledEnemiesCountTextBlock" Text="{Binding KilledEnemiesCount}"></TextBlock>
-            <Separator></Separator>
-            <TextBlock x:Name="GameStatus" Text="{Binding GameStatusText}"></TextBlock>
+            <TextBlock x:Name="TimeTextBlock" Text="{Binding ElapsedSeconds}"/>
+            <Separator/>
+            <Label Content="Felrobbantott ellenfelek száma:"/>
+            <TextBlock x:Name="KilledEnemiesCountTextBlock" Text="{Binding KilledEnemiesCount}"/>
+            <Separator/>
+            <TextBlock x:Name="GameStatus" Text="{Binding GameStatusText}"/>
         </StatusBar>
     </Grid>
 </Window>

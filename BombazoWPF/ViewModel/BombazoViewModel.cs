@@ -16,8 +16,7 @@ using System.Windows.Threading;
 namespace BombazoWPF.ViewModel {
     public class BombazoViewModel : ViewModelBase {
         private GameModel? _model;
-        private bool _tableIsReady;
-        private int MapSize => GameTable.MapSize;
+        private bool _tableIsReady;        
         private GameTable GameTable => _model?.GameTable!;
         public string GameStatusText {
             get {
